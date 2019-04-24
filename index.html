@@ -1,0 +1,238 @@
+<!doctype html>
+<html>
+    <head>
+        <meta charset="utf-8">
+        <title>Linked List</title>
+        <link rel="stylesheet" type="text/css" href="Style/reset.css">
+        <link rel="stylesheet" type="text/css" href="Style/mainStyle.css">
+    </head>
+<body>
+
+    <main>
+        <h1>Linked List</h1>
+        <form name="LinkedListForm">
+
+            <input name="input" type="text" required>
+            <div class="button-wrapper">
+                <button id="button-add" type="button">aDD</button>
+                <button id="button-del" type="button">dEL</button>
+                <button id="button-show" type="button">sHOW</button>
+            </div>
+        </form>
+    </main>
+
+    <!---------       D3.js (Data Visualisation)       --------->
+
+    <script src="https://d3js.org/d3.v5.min.js"></script>
+
+    <!---------       JS code       --------->
+
+    <script>
+
+        var listStruct = new LinkedList();;
+
+        document.addEventListener('click', function(e){
+            var target = e.target;
+            let inputValue = null;
+            switch(target){
+                case document.getElementById('button-add'):
+                    inputValue = document.forms.LinkedListForm.elements.input.value;
+                    listStruct.Add(inputValue);
+                    break;
+                case document.getElementById('button-del'):
+                    inputValue = document.forms.LinkedListForm.elements.input.value;
+                    listStruct.Del(inputValue);
+                    break;
+                case document.getElementById('button-show'):
+                    document.onmouseout(e);
+                    listStruct.Show();
+                    break;
+            }
+        })
+
+        var createdTooltip = null;
+
+        document.getElementById('button-del').onmouseover = function(){
+            var div = document.createElement('div');
+            div.classList.add('tooltip');
+            div.textContent = 'Введите позицию элемента\nдля удаления';
+            document.body.appendChild(div);
+            div.style.top = document.querySelector('main').getBoundingClientRect().top + document.documentElement.scrollTop + document.querySelector('main').offsetHeight + 10 + 'px';
+            div.style.left = document.querySelector('main').getBoundingClientRect().left + ((document.querySelector('main').offsetWidth - div.offsetWidth) / 2)+ 'px';
+
+            createdTooltip = div;
+        };
+
+        document.onmouseout = function(e){
+            var target = e.target;
+
+            if(target == document.getElementById('button-del')){
+                if(createdTooltip){
+                    document.getElementById('button-del').classList.remove('tooltip');
+                    document.body.removeChild(createdTooltip);
+                    createdTooltip = null;
+                }
+            }
+            if(target == document.getElementById('button-show')){
+                if(document.querySelector('svg')){
+                    document.body.removeChild(document.querySelector('svg'));
+                }
+            }
+        };
+
+        function getRandom(){
+            return Math.random();
+        }
+
+        function renderSVG(){
+            var scaleX = d3.scaleLinear().domain([0, 680]).range([50, 630]);
+                    var scaleY = d3.scaleLinear().domain([180, 20]).range([180, 20]);
+
+                    var coords = [];
+                    for(var i = 0; i < listStruct.returnItems().length; i++)
+                        coords.push(i * 75);
+
+                    var svg = d3.select('body')
+                        .append('svg')
+                        .attr('width', '680')
+                        .attr('height', '200')
+                        .attr('class', 'show-area')
+                        .selectAll('g')
+                        .data(listStruct.returnItems())
+                        .enter()
+                    var g = svg.append('g')
+                        .attr("transform", (d,i) => {
+                            //let coordX = getRandom() * 660;
+                            //let coordY = getRandom() * 180;
+                            return "translate(" + scaleX(coords[i]) + "," + scaleY(90) + ")" });
+                    g.append('circle')
+                        .attr('r', (d) => { let radius = 15 + getRandom() * 35; return radius })
+                        .style('fill', (d) => {
+                            let col1 = getRandom() * 255;
+                            let col2 = getRandom() * 255;
+                            let col3 = getRandom() * 255;
+                            return 'rgba(' + col1 + ', ' + col2 + ', ' + col3 + ', 1)'
+                        });
+                    g.append('text')
+                        .attr('x', -5)
+                        .attr('y', 5)
+                        .attr('fill', 'black')
+                        .text((d) => {return d;});
+
+                console.dir(svg);
+        }
+
+        /* --- Linked List realisation --- */
+
+        function Node(data){
+            this.data = data;
+            this.next = null;
+        }
+
+        function LinkedList(){
+            this.head = null;
+            this.length = 0;
+            var items = null;
+
+            this.Add = function(item){
+                var node = new Node(item), currentNode = this.head;
+
+                if(!currentNode){
+                    this.head = node;
+                    this.length++;
+                    alert('element added!');
+
+                    return node;
+                }
+
+                while(currentNode.next){
+                    currentNode = currentNode.next;
+                }
+
+                currentNode.next = node;
+                this.length++;
+                alert('element added!');
+
+                return node;
+            };
+
+            this.Del = function(position){
+                var currentNode = this.head,
+                    length = this.length,
+                    count = 2,
+                    beforeNodeToDel = null,
+                    nodeToDel = null;
+
+                if(this.isEmpty()){
+                    alert('List is Empty!');
+
+                    return;
+                }
+
+                if(isNaN(position)){
+                    alert('error!\ntype Number.');
+                    return;
+                }
+
+                if(+position == 1){
+                    this.head = currentNode.next;
+                    currentNode = null;
+                    this.length--;
+                    alert('element deleted!');
+
+                    return;
+                }
+                if(+position < 1 || +position > length){
+                    alert('Error!\nWrong position!\nTry again!');
+
+                    return;
+                }
+
+                while(count <= +position){
+                    beforeNodeToDel = currentNode;
+                    nodeToDel = currentNode.next;
+                    currentNode = currentNode.next;
+                    count++;
+                }
+
+                beforeNodeToDel.next = nodeToDel.next;
+                nodeToDel = null;
+                this.length--;
+                alert('element deleted!');
+
+                return;
+            };
+
+            this.Show = function(){
+                if(this.isEmpty())  alert('List is empty!');
+                else{
+                    var currentNode = this.head,
+                    length = this.length,
+                    count = 0;
+
+                    items = new Array();
+
+                    while(count < length){
+                        items.push(currentNode.data);
+                        currentNode = currentNode.next;
+                        count++;
+                    }
+
+                    renderSVG();
+                    items = null;
+                }
+            };
+            
+            this.isEmpty = function(){
+                return this.length === 0;
+            }
+
+            this.returnItems = function(){
+                return items;
+            }
+        }
+
+    </script>
+
+</body>
+</html>
