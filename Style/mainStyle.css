@@ -1,0 +1,97 @@
+@charset "utf-8";
+/* CSS Document */
+
+body{
+    color: rgba(255, 255, 255, 1);
+    font: 24px monospace; 
+    text-align: center;
+    background-color: rgba(127, 127, 127, .1);
+}
+
+main{
+    border: 5px solid rgba(127, 127, 127, .9);
+    border-radius: 5px;
+    background-color: white;
+    min-width: 320px;
+    width: 240px;
+    margin: 175px auto;
+}
+
+h1{
+    color: black;
+    font-size: 45px;
+}
+
+.button-wrapper{
+    border: 1px solid rgba(127, 127, 127, .3);
+    width: 200px;
+    height: 115px;
+    margin: 10px auto;
+    position:  relative;
+}
+
+input, button{
+    display: block;
+    width: 200px;
+    height: 25px;
+    margin: 10px auto;
+    box-sizing: border-box;
+}
+
+input{
+    font-style: italic;
+    font-weight: 900;
+    padding: 0 35px;
+    margin-bottom: 10px;
+}
+
+input:focus{
+    border: none;    
+    box-shadow: 0px 0px 25px 25px rgba(127, 127, 127, .5);
+}
+
+button{
+    font: 900 14px monospace;
+    letter-spacing: 5px;
+    background-color: lightyellow;
+    border: 3px solid rgba(127, 127, 127, 1);
+    border-radius: 3px;
+}
+
+button:hover{
+    background-color: burlywood;
+    color: lightyellow;
+    cursor: pointer;
+    box-shadow: 0 10px lightyellow;
+}
+
+button:active{
+    border: none;
+    color: gray;
+    box-shadow: 0px 0px 25px 25px rgba(127, 127, 127, .5);
+}
+
+.tooltip{
+    color: white;
+    font-size: 14px;
+    font-weight: 900;
+    background-color: darksalmon;
+    opacity: .9;
+    position: absolute;
+    border: 3px solid gray;
+    border-radius: 3px;
+    padding: 5px 10px;
+}
+
+.show-area {
+    font-weight: bold;
+    position: absolute;
+    top: 412px;
+    left: 335px;
+    box-sizing: border-box;
+    background-color:burlywood;
+    opacity: .9;
+    border: 3px dashed white;
+    border-radius: 3px;
+    z-index: 1001;
+}
